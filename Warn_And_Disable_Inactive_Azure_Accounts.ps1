@@ -8,14 +8,6 @@ $excludeGroups = @(
   "xxxx-xxxxx-xxxxxx-xxxx-xxxx" # This is just the ObjectID of a test group.
 )
 
-
-#####################################################################
-# Run this first if not installed already (not needed)
-#####################################################################
-#Install-Module -Name Az -Scope CurrentUser -Repository PSGallery -Force
-#Install-Module AzureAD
-
-
 #####################################################################
 # Start
 #####################################################################
