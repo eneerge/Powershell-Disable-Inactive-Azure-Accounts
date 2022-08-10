@@ -117,27 +117,29 @@ foreach ($u in ($excludedUsers | Get-Unique -AsString | Sort-Object -Property di
 #####################################################################
 $usersToDisable = @()
 $usersToWarn = @()
-Foreach ($User in $Users) {
-
+foreach ($User in $Users) {
   # skip user if in an exclusion or already disabled
   if ($User.userPrincipalName -in $excludedUsers.userPrincipalName `
       -or $User.accountEnabled -eq $false) {
     continue
   }
 
-  # If user never logged in, then set last login to the last password reset date. By using last password reset date, we can prevent deactivating the account again after reactivating it recently by 1. reactivating the account and 2. resetting the password.
+  # Get days since last activity
+  $TimeSpanLastLogin = $null
   if ($User.LastLoginDate -eq $null) {
-    $User.LastLoginDate = $User.lastPasswordChangeDateTime
+    $TimeSpanLastLogin = New-TimeSpan -Start $User.lastPasswordChangeDateTime -End $Today
   }
-
-  # Get days since last activity or creation time
-  $TimeSpan = New-TimeSpan -Start $User.LastLoginDate -End $Today
+  else {
+    $TimeSpanLastLogin = New-TimeSpan -Start $User.LastLoginDate -End $Today
+  }
+  $TimeSpanPWReset = New-TimeSpan -Start $User.lastPasswordChangeDateTime -End $Today
+  $TimeSpanCreation = New-TimeSpan -Start $User.createdDateTime -End $Today
 
   # User should be expired at this many days
-  if ($TimeSpan.Days -ge $disableAt) {
+  if ($TimeSpanLastLogin.Days -ge $disableAt -and $TimeSpanPWReset.Days -ge $disableAt) {
     $usersToDisable += $User
   }
-  elseif ($TimeSpan.Days -ge ($sendWarningNoticeAt)) {
+  elseif ($TimeSpanLastLogin.Days -ge $sendWarningNoticeAt -and $TimeSpanPWReset.Days -ge $disableAt) {
     $usersToWarn += $User
   }
 }
