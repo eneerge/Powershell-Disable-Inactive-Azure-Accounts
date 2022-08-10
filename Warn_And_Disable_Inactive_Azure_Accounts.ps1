@@ -152,11 +152,11 @@ foreach ($User in $Users) {
 foreach ($User in $usersToWarn) {
   $TimeSpan = New-TimeSpan -Start $User.LastLoginDate -End $Today
 
-  # If users logged in before, show the last login date
+  # If user never logged in, show when it was created
   if ($User.LastLoginDate -eq $User.createdDateTime) {
     "$(($User.displayName.PadRight(30) + " <"+ $User.userPrincipalName + ">").PadRight(65)) - Account Never Logged Into (Last Password Change Date: $($User.LastLoginDate.ToString("MM/dd/yyyy")) $($TimeSpan.Days) days ago)" | out-file -NoNewline -Append $logFile
   }
-  # If user never logged in, show when it was created
+  # If users logged in before, show the last login date
   else {
     "$(($User.displayName.PadRight(30) + " <"+ $User.userPrincipalName + ">").PadRight(65)) - Stale Account (Last logon: $($User.LastLoginDate) $($TimeSpan.Days) days ago)" | out-file -NoNewline -Append $logFile
   }
@@ -172,11 +172,11 @@ foreach ($User in $usersToWarn) {
 foreach ($User in $usersToDisable) {
   $TimeSpan = New-TimeSpan -Start $User.LastLoginDate -End $Today
 
-  # If users logged in before, show the last login date
+  # If user never logged in, show when it was created
   if ($User.LastLoginDate -eq $User.createdDateTime) {
     "$(($User.displayName.PadRight(30) + " <"+ $User.userPrincipalName + ">").PadRight(65)) - Account Never Logged Into (Last Password Change Date: $($User.LastLoginDate.ToString("MM/dd/yyyy")) $($TimeSpan.Days) days ago)" | out-file -NoNewline -Append $logFile
   }
-  # If user never logged in, show when it was created
+  # If users logged in before, show the last login date
   else {
     "$(($User.displayName.PadRight(30) + " <"+ $User.userPrincipalName + ">").PadRight(65)) - Stale Account (Last logon: $($User.LastLoginDate) $($TimeSpan.Days) days ago)" | out-file -NoNewline -Append $logFile
   }
