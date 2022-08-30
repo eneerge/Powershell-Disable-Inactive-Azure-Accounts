@@ -131,7 +131,7 @@ foreach ($User in $Users) {
   if ($TimeSpanLastLogin.Days -ge $disableAt -and $TimeSpanPWReset.Days -ge $disableAt) {
     $usersToDisable += $User
   }
-  elseif ($TimeSpanLastLogin.Days -ge $sendWarningNoticeAt -and $TimeSpanPWReset.Days -ge $disableAt) {
+  elseif ($TimeSpanLastLogin.Days -ge $sendWarningNoticeAt -and $TimeSpanPWReset.Days -ge $sendWarningNoticeAt) {
     $usersToWarn += $User
   }
 }
